@@ -1,7 +1,7 @@
 const fs = require('fs')
 const babel = require('@babel/core')
 const generator = require('@babel/generator').default
-const { js_beautify } = require('./util/jsbeautify')
+const { js_beautify } = require('js-beautify')
 const diff = require('diff');
 const args = process.argv.slice(2);
 

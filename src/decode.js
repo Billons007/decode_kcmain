@@ -3,11 +3,13 @@ const babel = require('@babel/core')
 const generator = require('@babel/generator').default
 const t = require('@babel/types')
 const names = require('./const/names')
-const { js_beautify } = require('./util/jsbeautify')
+const { js_beautify } = require('js-beautify')
 const args = process.argv.slice(2);
+const path = require('path');
 
 let code = fs.readFileSync(args[0], 'utf-8')
 let ast = babel.parse(code)
+let filename = path.basename(args[0])
 
 
 
@@ -423,7 +425,7 @@ output = js_beautify(output)
 
 /** Output File */
 fs.existsSync('dist') || fs.mkdirSync('dist')
-fs.writeFileSync('dist/main.js', output)
+fs.writeFileSync(`dist/${filename}`, output)
 
 /** Export The Output For Other Modules */
 module.exports.code = output;
