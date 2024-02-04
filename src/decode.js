@@ -362,45 +362,6 @@ babel.traverse(ast, {
                         if (node.callee.type == "Identifier" && node.callee.name == "_require") {
                             node.arguments[0].value = propKeys[node.arguments[0].value]
                         }
-                    },
-                    /** Extract ReturnStatement's SequeceExpression */
-                    ReturnStatement(path) {
-                        let node = path.node
-                        if (node.argument && node.argument.type == "SequenceExpression" && node.argument.expressions.length > 1) {
-                            for (let i = 0; i < node.argument.expressions.length - 1; i++) {
-                                path.insertBefore(t.expressionStatement(node.argument.expressions[i]))
-                            }
-                            node.argument.expressions = [node.argument.expressions[node.argument.expressions.length - 1]]
-                        }
-                    },
-                    /** Extract IfStatement's SequeceExpression */
-                    IfStatement(path) {
-                        let node = path.node
-                        if (node.test && node.test.type == "SequenceExpression" && node.test.expressions.length > 1) {
-                            for (let i = 0; i < node.test.expressions.length - 1; i++) {
-                                let _insertPath = path;
-                                while (_insertPath.parent.type == "IfStatement")
-                                    _insertPath = _insertPath.parentPath;
-                                path.insertBefore(t.expressionStatement(node.test.expressions[i]))
-                            }
-                            node.test.expressions = [node.test.expressions[node.test.expressions.length - 1]]
-                        }
-                    }
-                })
-
-                propPath.traverse({
-                    /** Extract Other SequeceExpression */
-                    SequenceExpression(path) {
-                        let node = path.node
-                        let parentPath = path.parentPath;
-                        let parentNode = parentPath.node
-                        if (path.parent.type == "ExpressionStatement") {
-                            for (let i = 0; i < node.expressions.length - 1; i++) {
-                                parentPath.insertBefore(t.expressionStatement(node.expressions[i]))
-                            }
-                            parentNode.expression ? parentNode.expression = node.expressions[node.expressions.length - 1] :
-                                parentNode.expressions = [node.expressions[node.expressions.length - 1]]
-                        }
                     }
                 })
             }
